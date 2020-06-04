@@ -48,6 +48,9 @@ module.exports = async (config, cli, command) => {
     },
   });
 
+  // Prepare Command Inputs
+  utils.setInputsForCommand(instanceYaml, command, config);
+
   // Prepare Options
   const options = {};
   options.debug = config.debug;
@@ -80,17 +83,10 @@ module.exports = async (config, cli, command) => {
   } else if (command === 'remove') {
     // run remove
     cli.status('Removing', null, 'white');
-
-    // The "inputs" in serverless.yml are only for deploy.  Remove them for all other commands
-    instanceYaml.inputs = {};
-
     await sdk.remove(instanceYaml, instanceCredentials, options);
   } else {
     // run a custom method synchronously to receive outputs directly
     options.sync = true;
-
-    // The "inputs" in serverless.yml are only for deploy.  Remove them for all other commands
-    instanceYaml.inputs = {};
 
     // run a custom method
     cli.status('Running', null, 'white');
